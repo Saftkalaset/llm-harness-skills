@@ -1,24 +1,35 @@
 # <Project Name>
-Status: v1 | Updated: YYYY-MM-DD | Blender: 5.2+ | Printer: Prusa Core One (0.4mm, PLA)
+Revision: <revision> | Date: <date> | Units/frame: <declared units and assembly frame>
 
-## 1. Goal & Constraints
-- **Function:** <1-2 sentences on what the part does and what it mates with>
-- **Fit & Print:** <bed orientation, support strategy, critical load direction>
+## Goal and constraints
+- Function/hardware: <purpose and source references>
+- Frozen confirmed interfaces: <user-tested fit and evidence>
+- Printer/nozzle/HF/filament: <actual hardware and resolved profile source>
+- Assembly/space: <piece count, tools allowed, above/below/rear clearance>
+- Priorities: <print time, material, aesthetics, bulk; unresolved constraints>
 
-## 2. Dimensions & Clearances (mm)
-| Feature | Nominal | Clearance | **CAD Target** | Source / Confidence |
-| :--- | ---: | ---: | ---: | :--- |
-| <e.g. Stand column OD> | 60.0 | +0.20 /side (+0.40 Ø) | **60.40 ID** | <spec / caliper / photo (high/med/low)> |
+## Dimensions and evidence
+| Feature | Nominal | Per-side / total allowance | CAD target | Source, method, uncertainty |
+| --- | ---: | --- | ---: | --- |
+| <feature> | <value> | <allowance> | <target> | <measurement/CAD/estimate/user confirmation> |
 
-## 3. Scene Map (all local meshes centered on `(0,0,0)`; positioned via `obj.location`)
-- `1_Printable_Parts`: `<Main_Part>` (`0, 0, 0`)
-- `2_Boolean_Cutters` (`hide_set(True)`, `hide_viewport=False`): `Cutter_<Feature>` (`x, y, z`)
-- `3_References`: `<Ref_Object>` (`x, y, z`), `KeepOut_<Feature>` (wireframe clearance volumes)
-- **In-File Cache:** Detailed port/vent coordinates cached in `scene["cad_specs"]` (`get_specs()`); parametric rebuild script stored in `bpy.data.texts["parametric_recipe.py"]` (`get_recipe()`).
+- Cache validity: <source fingerprint/revision, frame, method, date where relevant>
+- Envelope versus functional geometry: <actual openings/contacts versus approximations>
 
-## 4. Active Decisions (current rules only — history in `LOG.md`)
-- <Active design constraint or rule>
+## Editable scene
+- Printable parts: <names and expected component count>
+- References/cutters/keep-outs: <names, common-frame parameters>
+- Recipe: <stored function, explicit load/rebuild steps; no top-level execution>
 
-## 5. Latest Audit & Next Actions
-- `AUDIT <Main_Part>`: `size=(...) vol=...cm3 shells=1 nonmanifold=0 zero_area=0 overhang>45deg=...mm2 keepout_hits=0 -> PASS`
-- [ ] <Next concrete step>
+## Current decisions and verification
+- Design tradeoffs: <chosen concept, alternatives and physical limitations>
+- Mesh integrity: <scoped result and revision/hash>
+- Fit/motion: <tolerance, sampling resolution, seated/released/locked results>
+- Supports/toolpaths: <orientation, removal access, effective settings, verified bounds/margin>
+- Mechanics/thermals: <model assumptions and remaining physical tests>
+
+## Artifacts and next action
+- Active `.blend`; neutral `.geometry.3mf`; configured project `.3mf` if verified.
+- Frozen geometry/configuration hashes: <values or manifest path>
+- Reproducible checks/logs: <retained paths and tool versions>
+- Next step: <specific remaining task; do not imply unperformed checks passed>

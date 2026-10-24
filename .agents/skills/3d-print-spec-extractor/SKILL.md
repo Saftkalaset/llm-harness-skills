@@ -6,7 +6,7 @@ description: >-
 
 # 3D Print Spec & Dimension Extractor
 
-Use this skill to gather and report physical dimensions from manufacturer photos, specifications, or product links. Delegate to a research subagent when one is available; otherwise do the research directly. Distinguish sourced dimensions from estimates, and do not present image-derived estimates as precise measurements.
+Use this skill to gather and report physical dimensions from manufacturer photos, specifications, or product links. Delegate independent reference lookup to a research worker when available and authorized; otherwise research directly. Give it a short brief and request a specification table plus design-relevant uncertainties, not the full conversation. Distinguish sourced dimensions from estimates, and do not present image-derived estimates as precise measurements.
 
 ## Workflow
 
@@ -39,24 +39,25 @@ python3 <skill-directory>/scripts/measure_reference.py bbox --image scratch/crop
 
 Record the source URL/file, view and measurement plane, calibration feature, pixel span, scale, and estimated uncertainty. Label every value as manufacturer-specified, directly measured, image-derived, or estimated. If perspective or occlusion makes a measurement unreliable, say so and request a better source or direct measurement.
 
-### 4. Apply 3D Printing Tolerances (Prusa Core One / 0.4mm Nozzle / PLA)
-Convert raw physical measurements into CAD modeling targets:
-* **Fit terminology:** Always state both per-side (radial) and total (diametral) clearance (`ID = OD + 2c`). Distinguish the **CAD target** from the **as-printed dimension**: enclosed circular bores in PLA shrink by $\sim 0.15\text{–}0.20\text{ mm}$ on the Prusa Core One due to chordal facet approximation and thermal contraction.
-* **Snug locating slip fit (e.g. cylinder collar):** $+0.20\text{ mm}$ radial ($+0.40\text{ mm}$ diametral; e.g., $60.0\text{ mm}$ column $\rightarrow 60.40\text{ mm}$ CAD ID $\rightarrow \approx 60.20\text{ mm}$ as-printed ID, leaving $\sim 0.10\text{ mm}$ physical clearance per side).
-* **Loose clearance fit:** $+0.30\text{ mm}$ radial ($+0.60\text{ mm}$ diametral).
-* **Uncertain nominal dimensions ($\pm 0.3\text{ mm}$ or image-derived):** Recommend printing a fast $5\text{ mm}$-tall fit-test ring coupon before printing the full body.
-* **Cable plug pass-through / cutout:** $+1.5\text{ mm}$ to $+2.25\text{ mm}$ per side ($+3.0$ to $+4.5\text{ mm}$ total width).
-* **Horizontal arches & bridges:** A $45^\circ$ peaked/teardrop roof is self-supporting; a smooth rounded arch with a flat center tangent requires slicer supports (or accepts minor inner-layer sag) on spans $> 10\text{ mm}$.
+### 4. Convert evidence into fit targets
+
+- State both per-side/radial and total/diametral clearance (`ID = OD + 2c`). Separate nominal hardware size, CAD allowance and measured as-printed size.
+- Bore compensation depends on actual nozzle, extrusion width, material, orientation and calibration. Do not assert a fixed printer-wide shrinkage correction. For an uncalibrated slip fit, a small coupon with several allowances is more reliable than a full print; record the selected value and its process.
+- Preserve user-confirmed interfaces unless new evidence requires changing them. Manufacturer CAD establishes nominal geometry, not an as-built tolerance guarantee.
+- Include shoulders, feet, ridges, complete plug bodies and cable bends; connector-opening bounds alone do not prove insertion/access.
+- Distinguish bounding envelopes from actual vents/contact surfaces. A percentage projected overlap is not airflow or thermal-performance loss.
+- For horizontal roofs, peaked profiles can reduce supports; rounded crowns and bridges depend on the actual process and span. Label support requirements and verify in the slice rather than declaring universal support-free angles.
+- Cache values with source URL/file, method, frame, uncertainty and source-geometry revision/fingerprint. Reuse matching evidence; remeasure changed or contradicted records. Keep machine-specific calibration separate from shared defaults.
 
 ### 5. Standard Output Format (Matches `PROJECT.md` Section 2)
-Return **only** the completed Mechanical Spec Sheet table in the exact 5-column format used by `PROJECT.md` so the caller can paste it directly without reformatting:
+Return a concise mechanical specification table and any critical limitations or missing measurements affecting the design. Include manufacturer-specified, directly measured, image-derived or estimated status in the source column. Example format:
 
 ```markdown
 ### Mechanical Spec Sheet: [Product / Component Name]
-* **Reference Scale:** 20.23 px/mm (calibrated from 60.0 mm base diameter)
+* **Reference Scale:** 20.23 px/mm (only for the calibrated image plane; include source and uncertainty)
 
 | Feature | Nominal | Clearance | **CAD Target** | Source / Confidence |
 | :--- | ---: | ---: | ---: | :--- |
-| Stand Base Column Ø | 60.0 | +0.20 /side (+0.40 Ø) | **60.40 ID** | Product spec + Core One PLA shrinkage compensation (med-high) |
-| Cable Cutout (W × H) | 11.5 × 7.0 | +2.25 /side, +5.5 H | **16.0 × 12.5** | USB-C housing + strain relief boot (high; rounded arch w/ support) |
+| Stand Base Column Ø | 60.0 | +0.20 /side (+0.40 Ø) | **60.40 ID** | Manufacturer nominal; allowance is a starting target pending printed coupon |
+| Cable Cutout (W × H) | 11.5 × 7.0 | +2.25 /side (+4.5 total W/H) | **16.0 × 11.5** | Measured plug envelope; allow bend/access space separately; verify supports |
 ```
