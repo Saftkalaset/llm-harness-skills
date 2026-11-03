@@ -8,3 +8,6 @@ Thumbs.db
 *.bak
 __pycache__/
 *.pyc
+
+# Private machine and user context (shared locally by agents)
+/.local/system-context/

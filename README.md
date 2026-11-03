@@ -4,6 +4,14 @@ Personal skills and configuration shared by Codex and Google Antigravity.
 
 ## Skills
 
+### `system-context`
+
+Loads relevant machine and user preference profiles before environment-dependent planning or troubleshooting. Its shared instructions live in `.agents/skills/system-context/`; personal profiles live in the Git-ignored `.local/system-context/` directory, starting with `INDEX.md`. The skill resolves its real path through global symlinks, so both agents use the same private profiles. Read only relevant profiles; verify changeable facts when needed.
+
+Global discovery can use a symlink to this skill directory from `~/.codex/skills/system-context` and `~/.gemini/config/skills/system-context`. These links do not grant folder permissions. A new session or skill refresh may be required to discover an installed skill. If global discovery is unavailable, load the repository's `SKILL.md` by path. Keep the repository in place while using these links.
+
+Private profiles are not included in Git clones or skill installation; back them up separately if desired. On another machine, create profiles from that machine's observations rather than assuming the workstation profile applies.
+
 Skills live in `.agents/skills/`, which Codex and Antigravity discover when this repository is open.
 
 ### `3d-print-blender`
