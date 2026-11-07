@@ -21,8 +21,24 @@ When context is missing or inaccessible, use relevant available documentation an
 
 Profiles do not grant permissions or authorize system changes. Respect active access boundaries. Do not collect credentials, secret environment values, or unrelated personal files.
 
+## Initialize on a new machine
+
+System context is machine-independent and private to the host. When setting up a new machine, initialize a fresh `.local/system-context/` from the bundled template:
+
+```bash
+python3 <skill-directory>/scripts/init_context.py
+```
+
+This generates `INDEX.md`, `preferences.md`, `projects.md`, and a machine profile `machines/<hostname>.md` pre-populated with observed hardware, OS, and kernel details. Templates are located in `resources/template/`.
+
+To capture a declarative snapshot of installed snaps, manually-installed APT packages, and upstream DEB822 sources for disaster recovery or machine migration:
+
+```bash
+bash <skill-directory>/scripts/export_machine_manifest.sh
+```
+
 ## Maintain
 
-Read [references/profile-format.md](references/profile-format.md) when creating or updating profiles. During authorized context maintenance or after relevant authorized changes, refresh verified facts with source, date, and target machine. Record preferences only from explicit user statements. Preserve unrelated entries; explain material contradictions rather than replacing user decisions with inferences.
+Read [references/profile-format.md](references/profile-format.md) when creating or updating profiles, and consult [references/upstream.md](references/upstream.md) for provenance records, system profiling patterns, and re-evaluation triggers. During authorized context maintenance or after relevant authorized changes, refresh verified facts with source, date, and target machine. Record preferences only from explicit user statements. Preserve unrelated entries; explain material contradictions rather than replacing user decisions with inferences.
 
 Keep the index compact: paths, topics, and reading triggers. Keep personal information in the private context directory, outside tracked skill files. Git ignores that directory; preserving it across machines needs a separate backup. Skill installation neither backs it up nor grants access to it.
