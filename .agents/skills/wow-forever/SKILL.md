@@ -82,8 +82,12 @@ Because *World of Warcraft: Forever* is an actively evolving Classic+ branch:
 ## 5. Deliverable & Completion Workflow
 
 - **Clarifying Questions First:** If critical context is missing (e.g., unknown current zone, current Leatherworking/Skinning skill rank, or dungeon group availability), ask concise clarifying questions (stating a recommended default first).
-- **Mandatory HTML Guide & Interactive Form in Firefox Upon Completion:** Whenever research finishes and you have **no remaining questions to ask**, you **must** compile the actionable guide, route table, recipe/pattern targets, and an interactive progress/checklist form using [`html-presentation`](../html-presentation/SKILL.md) (`scripts/render_report.py --open`) so it opens directly in Firefox:
+- **Mandatory HTML Guide & Interactive Form in Firefox Upon Completion:** Whenever research finishes and you have **no remaining questions to ask**, you **must** either update/open the persistent **Interactive Progression Dashboard** (`scripts/render_progression_dashboard.py --open` → `~/Documents/reviews/saftis_wow_forever_dashboard.html`) or compile a topic-specific HTML guide + interactive progress/checklist form using [`html-presentation`](../html-presentation/SKILL.md) (`scripts/render_report.py --open`) so it opens directly in Firefox:
   ```bash
+  # Re-compile and open the full Level 16 -> 60 interactive client-side dashboard
+  python3 <skill-directory>/scripts/render_progression_dashboard.py --open
+
+  # Or render a topic-specific HTML guide + interactive form
   cat << 'EOF' | python3 <html-presentation-skill-dir>/scripts/render_report.py \
     --title "WoW Forever Efficiency Guide: <Bracket / Topic>" \
     --scope "Night Elf Feral Druid (PvP) • Skinning & Leatherworking" \

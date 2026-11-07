@@ -63,6 +63,9 @@ Do not silently filter out a functionally superior product because it violates a
 - **HTML Structure Requirements:**
   1. **Executive Metric / Archetype Cards (`.cards-grid`):** Highlight the Best Overall Pick, Principled/Local Pick, and Second-Hand/TCO Pick.
   2. **Candidate Comparison & Trade-Off Tension Matrix (`<table>`):** Include verified Tier 1/2 evidence, failure-mode findings, OEM/white-label disclosures, and explicit warning badges (`.badge-warning`, `.badge-danger`).
-  3. **Interactive Decision / Selection Form (`<form>`):** Include an HTML form section (using `.form-grid`, `.form-group`, `.choice-label`, and `<textarea>`) where the user can select preferred candidates, toggle trade-off priorities, or jot down follow-up notes directly in Firefox.
+  3. **Direct Navigation & Producer/Seller Links (Mandatory):** For every shortlisted product, service, venue, or activity, always provide clickable direct links:
+     - **Official Producer / Seller / Venue Website:** Link directly to the manufacturer/brand, primary seller, official restaurant/venue site, or direct box office (avoid affiliate link farms, aggregators, and scalper platforms).
+     - **Google Maps Navigation:** For all physical locations (restaurants, venues, service centers, brick-and-mortar stores, cultural sights), provide a direct Google Maps search/place link formatted as `https://www.google.com/maps/search/?api=1&query=<URL-encoded-name-and-address>`.
+  4. **Interactive Decision / Selection Form (`<form>`):** Include an HTML form section (using `.form-grid`, `.form-group`, `.choice-label`, and `<textarea>`) where the user can select preferred candidates, toggle trade-off priorities, or jot down follow-up notes directly in Firefox.
 - **Conversational Output:** Keep the terminal/chat response concise—provide a compact Markdown summary table of the archetype picks and a clickable `file:///` link to the generated HTML file.
 - **Provenance & Maintenance:** Consult [references/upstream.md](references/upstream.md) when upgrading this skill's research methodology.
