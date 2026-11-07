@@ -27,21 +27,46 @@ Extracts physical dimensions, port heights, and clearances from manufacturer pho
 - **Toolkit:** Bundled CLI tool `scripts/measure_reference.py` using Pillow & NumPy for pixel-to-millimeter scaling
 - **Output:** Standardized mechanical spec sheets with 3D print fit tolerances
 
+### `firefox`
+Inspects and operates local Firefox profiles, open windows/tabs, synced tabs from other devices, and CLI tab launching.
+- **Profile Discovery:** Automatically resolves Snap (`~/snap/firefox/common/.mozilla/firefox/`), native, Flatpak, and macOS profile paths
+- **Toolkit:** Bundled zero-dependency CLI helper `scripts/firefox_inspect.py` for lock-safe WAL SQLite queries (`synced-tabs.db`) and `mozLz40` session decompression (`recovery.jsonlz4` via `liblz4`)
+- **Tab Launching:** Opens batches of URLs or synced device tabs reliably with explicit `--new-tab` flags
+
+### `html-presentation`
+Generates standalone, self-contained HTML presentations, analytical reviews, and audit reports for user review, and opens them in Firefox.
+- **Delivery Invariant:** Replaces raw Markdown review files with styled, zero-dependency HTML reports containing metrics, responsive tables, and dark/light mode themes
+- **Toolkit:** Bundled CLI helper `scripts/render_report.py` and modular templates in `templates/report.html`
+- **Inspiration References:** Tracks upstream ecosystem skills and provenance in `references/upstream.md` (`claude-report-skill`, `frontend-slides`, `html-presentation`, `ui-ux-pro-max-skill`)
+
 ## Quick Setup (New Machine)
 
-Prerequisites for the optional Antigravity setup: Bash, Python 3, and the Antigravity CLI configuration layout expected by this repository. The image measurement helper additionally requires Pillow and NumPy (`python3 -m pip install Pillow numpy`). The shared workspace skills need no setup when you open this repository in Codex or Antigravity.
+### Shared folder access
 
-To link all skills and apply the non-destructive whitelist permissions on a new machine:
+The [sync-harness-access skill](.agents/skills/sync-harness-access/SKILL.md) records authorized shared folder access in `config/folder-access.json` and guides an agent through updating each harness's settings. For example: “Give both harnesses persistent write access to `~/Documents/Blender files` and save it to this project.” After changing a settings panel, ask: “Reconcile folder access between both harnesses and this project.”
+
+Skills run during agent tasks. Automatic detection of settings-panel changes requires a separate watcher or hook; none is installed by this workflow. The shared record starts empty and does not import or revoke existing local grants. `setup.sh` does not apply this record. App/IDE targets are marked pending when only CLI settings can be verified.
+
+The skill is available in this workspace. To use it in other projects, link the single repository source into each harness's documented global skill location or load it by path. Keep global installation separate from permission grants.
+
+Prerequisites: Bash, Python 3.10+, and the standard Linux libraries. On Ubuntu 24.04+/26.10, install dependencies via `apt` to comply with PEP 668:
+```bash
+sudo apt install python3-pil python3-numpy liblz4-1
+```
+
+To link all skills, verify dependencies, and initialize context on a new machine:
 
 ```bash
-git clone git@github.com:Saftkalaset/antigravity-skills.git ~/Documents/antigravity-skills
-cd ~/Documents/antigravity-skills
+git clone git@github.com:Saftkalaset/llm-harness-skills.git ~/Documents/llm-harness-skills
+cd ~/Documents/llm-harness-skills
 ./setup.sh
 ```
 
 ### What `./setup.sh` does:
-1. Symlinks all skills in `.agents/skills/` to Antigravity's existing global IDE/App location, `~/.gemini/config/skills/`. Antigravity CLI also discovers the workspace skills directly from `.agents/skills/`.
-2. Merges the command and MCP allow-list entries in `config/permissions.json` into `~/.gemini/antigravity-cli/settings.json` without removing unrelated machine-specific settings.
+1. **`links`**: Symlinks all skills in `.agents/skills/` into both `~/.gemini/config/skills/` and `~/.codex/skills/`, links global rules `global/AGENTS.md` to both harnesses, and automatically prunes dead/broken symlinks.
+2. **`doctor`**: Runs environment diagnostics checking Python, Pillow, NumPy, LZ4, Firefox, Blender, and PrusaSlicer.
+3. **`init-context`**: Bootstraps machine-specific `.local/system-context/` from bundled templates if not already present.
+4. **`permissions`** *(Opt-in)*: Merges the optional command allow-list in `config/permissions.json` into `~/.gemini/antigravity-cli/settings.json` with backup and explicit confirmation (`--yes` to skip prompt).
 
 Codex discovers these skills and `AGENTS.md` from the repository without setup. Codex-specific Blender MCP and external project-folder access are documented in [docs/codex-setup.md](docs/codex-setup.md); they require local connection details and are not added to Antigravity's permissions file.
 

@@ -10,19 +10,24 @@ The Antigravity `config/permissions.json` file does not configure Codex. Keep th
 
 ## Blender MCP
 
-This repository does not yet configure a Blender MCP server for Codex. The Antigravity allow-list names Blender tools, but it does not contain the MCP server's launch command, arguments, or URL. Once those connection details are known, add the server to Codex with one of these forms:
+Codex supports the Blender MCP server using `mcp-for-blender` via `uvx`. In `~/.codex/config.toml`:
 
-```bash
-# Local MCP server (stdio)
-codex mcp add blender -- <server-command> <arg1> <arg2>
+```toml
+[mcp_servers.blender]
+command = "uvx"
+args = ["mcp-for-blender"]
 
-# Remote MCP server (HTTP)
-codex mcp add blender --url <server-url>
+[mcp_servers.blender.tools.get_scene_info]
+approval_mode = "approve"
 
-codex mcp list
+[mcp_servers.blender.tools.look]
+approval_mode = "approve"
+
+[mcp_servers.blender.tools.execute_blender_code]
+approval_mode = "approve"
 ```
 
-Codex stores MCP configuration in `~/.codex/config.toml`, shared by the Codex app, CLI, and IDE extension. A trusted project can instead use `.codex/config.toml`; do not commit credentials or machine-specific executable paths. After connecting, inspect the server's actual tool names and enable only the Blender tools the workflow needs. Start with approval required for tool calls that can change the active Blender scene or write files.
+Codex stores MCP configuration in `~/.codex/config.toml`, shared by the Codex app, CLI, and IDE extension. Start with approval required for tool calls that can change the active Blender scene or write files.
 
 ## Blender project file access
 
