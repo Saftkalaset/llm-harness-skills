@@ -43,8 +43,15 @@ Generates standalone, self-contained HTML presentations, analytical reviews, and
 Conducts values-aware, multi-objective purchase and consumption research across physical goods, digital services/software, physical/local services, and dining/cultural events.
 - **Preference Separation:** Reads personal weights, origin/energy hierarchies, and trade-off rules from `.local/system-context/consumption-preferences.md` (with a public template in `references/rubric-template.md`)
 - **Four-Domain Evaluation:** Evaluates physical goods (materials, metric/ISO, community repairability, ODM detection), digital services (clean-grid/nuclear hosting, agent-friendly data migration, Linux support), local services (employee satisfaction, independent providers), and dining/culture (pescetarian/flexitarian fit, independent venues, anti-scalping)
-- **Deliverables:** Archetype recommendations and explicit Trade-Off Tension Matrices rendered via `html-presentation`
+- **Deliverables:** Archetype recommendations, explicit Trade-Off Tension Matrices, and interactive decision forms rendered via `html-presentation`
 - **Inspiration References:** Tracks evaluated community skills in `references/upstream.md` (`product-research-skill`, `customer-research`, `amazon-product-research-skill`)
+
+### `wow-forever`
+Researches, optimizes, and plans gameplay for *World of Warcraft: Forever* (`1.60.1` / Classic+ branch), tailored for efficiency-first leveling and parallel profession progression.
+- **Character Context Separation:** Reads active character state (e.g., Night Elf Feral Druid, PvP server, Skinning & Leatherworking) and optimization rules from `.local/system-context/wow-forever-profile.md` (with a public template in `references/character-profile-template.md`)
+- **Live MCP + CLI Toolkit:** Uses the hosted `everloot` (`https://everloot.app/mcp/public`) and `wowdb` (`https://azeroth.wiki/api/mcp`) Streamable HTTP MCP servers alongside the bundled zero-dependency CLI helper `scripts/wow_forever_query.py`
+- **Deliverables:** Compiles interactive HTML leveling/crafting guides and progress forms in Firefox via `html-presentation`
+- **Ecosystem Evolution:** Tracks evaluated community MCPs, datamining tools, and simulators (`Everloot/everloot`, `azeroth-db/wowdb-mcp`, `fitzforge/polestar`, `wowsims/forever`, `alcaras/forever-ref`) in `references/upstream.md` with a protocol for adding future research skills
 
 ## Quick Setup (New Machine)
 

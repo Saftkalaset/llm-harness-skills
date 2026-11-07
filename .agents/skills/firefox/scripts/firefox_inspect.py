@@ -218,6 +218,125 @@ def open_urls(
         subprocess.run(cmd, check=True)
 
 
+ACTION_NAMES = {
+    1: "saveToDisk",
+    2: "useHelperApp",
+    3: "handleInternally",
+    4: "useSystemDefault",
+}
+
+
+def load_handlers(profile: Path, filter_scheme: str | None = None) -> dict:
+    handlers_file = profile / "handlers.json"
+    if not handlers_file.is_file():
+        return {}
+    try:
+        with open(handlers_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        return {"error": str(e)}
+
+    schemes = data.get("schemes", {})
+    if filter_scheme:
+        schemes = {
+            k: v for k, v in schemes.items() if filter_scheme.lower() in k.lower()
+        }
+
+    results = {}
+    for scheme, details in schemes.items():
+        act_code = details.get("action")
+        act_name = ACTION_NAMES.get(act_code, f"unknown({act_code})")
+        sys_default = None
+        if shutil.which("xdg-mime"):
+            try:
+                res = subprocess.run(
+                    ["xdg-mime", "query", "default", f"x-scheme-handler/{scheme}"],
+                    capture_output=True,
+                    text=True,
+                    timeout=2,
+                )
+                if res.returncode == 0 and res.stdout.strip():
+                    sys_default = res.stdout.strip()
+            except Exception:
+                pass
+        results[scheme] = {
+            "action": act_name,
+            "actionCode": act_code,
+            "ask": details.get("ask", False),
+            "handlers": details.get("handlers", []),
+            "systemDefault": sys_default,
+        }
+    return results
+
+
+def load_user_prefs(profile: Path) -> dict[str, str | bool | int]:
+    user_js = profile / "user.js"
+    if not user_js.is_file():
+        return {}
+    prefs: dict[str, str | bool | int] = {}
+    import re
+
+    pattern = re.compile(
+        r'^\s*user_pref\(\s*["\']([^"\']+)["\']\s*,\s*(.*?)\s*\)\s*;\s*$',
+        re.MULTILINE,
+    )
+    content = user_js.read_text(encoding="utf-8", errors="ignore")
+    for match in pattern.finditer(content):
+        k, raw_v = match.group(1), match.group(2).strip()
+        if raw_v.lower() == "true":
+            prefs[k] = True
+        elif raw_v.lower() == "false":
+            prefs[k] = False
+        elif raw_v.isdigit():
+            prefs[k] = int(raw_v)
+        elif raw_v.startswith('"') and raw_v.endswith('"'):
+            prefs[k] = raw_v[1:-1]
+        elif raw_v.startswith("'") and raw_v.endswith("'"):
+            prefs[k] = raw_v[1:-1]
+        else:
+            prefs[k] = raw_v
+    return prefs
+
+
+def stage_user_pref(profile: Path, key: str, value_raw: str) -> None:
+    user_js = profile / "user.js"
+    lines = []
+    if user_js.is_file():
+        lines = user_js.read_text(encoding="utf-8", errors="ignore").splitlines()
+
+    import re
+
+    # Parse value type
+    v_clean = value_raw.strip()
+    if v_clean.lower() == "true":
+        val_str = "true"
+    elif v_clean.lower() == "false":
+        val_str = "false"
+    elif v_clean.isdigit():
+        val_str = v_clean
+    else:
+        val_str = json.dumps(v_clean)
+
+    pref_pattern = re.compile(rf'^\s*user_pref\(\s*["\']{re.escape(key)}["\']')
+    new_line = f'user_pref("{key}", {val_str});'
+
+    found = False
+    new_lines = []
+    for line in lines:
+        if pref_pattern.match(line):
+            new_lines.append(new_line)
+            found = True
+        else:
+            new_lines.append(line)
+
+    if not found:
+        if new_lines and new_lines[-1].strip():
+            new_lines.append("")
+        new_lines.append(new_line)
+
+    user_js.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", help="Explicit Firefox profile directory path")
@@ -232,6 +351,17 @@ def main() -> None:
     p_open = sub.add_parser("open-tabs", help="List currently open windows and tabs")
     p_open.add_argument("--window", type=int, help="Filter to 1-based window number")
     p_open.add_argument("--json", action="store_true", help="Output JSON")
+
+    p_handlers = sub.add_parser("handlers", help="Inspect protocol scheme handlers from handlers.json")
+    p_handlers.add_argument("--scheme", help="Filter by protocol scheme (e.g. magnet, mailto)")
+    p_handlers.add_argument("--json", action="store_true", help="Output JSON")
+
+    p_prefs = sub.add_parser("user-prefs", help="List preferences staged in user.js")
+    p_prefs.add_argument("--json", action="store_true", help="Output JSON")
+
+    p_set = sub.add_parser("set-user-pref", help="Safely stage a user_pref in user.js")
+    p_set.add_argument("--key", required=True, help="Preference key")
+    p_set.add_argument("--value", required=True, help="Preference value (boolean, int, or string)")
 
     p_launch = sub.add_parser("open-urls", help="Reliably open URLs in Firefox")
     p_launch.add_argument(
@@ -286,6 +416,40 @@ def main() -> None:
             print(f"Window {win['window']} ({len(tabs)} tabs):")
             for t in tabs:
                 print(f"  {t['index']:2d}. {t['title']} -> {t['url']}")
+        return
+
+    if args.cmd == "handlers":
+        data = load_handlers(profile, args.scheme)
+        if args.json:
+            print(json.dumps(data, indent=2, ensure_ascii=False))
+            return
+        if not data:
+            print("No matching scheme handlers found in handlers.json.")
+            return
+        for scheme, info in data.items():
+            sys_info = f" (system default: {info['systemDefault']})" if info.get("systemDefault") else ""
+            print(f"Scheme: {scheme} -> {info['action']} [ask={info['ask']}]{sys_info}")
+            for h in info.get("handlers", []):
+                h_name = h.get("name") or h.get("path") or h.get("uriTemplate")
+                print(f"  Handler: {h_name}")
+        return
+
+    if args.cmd == "user-prefs":
+        prefs = load_user_prefs(profile)
+        if args.json:
+            print(json.dumps(prefs, indent=2, ensure_ascii=False))
+            return
+        if not prefs:
+            print("No preferences staged in user.js.")
+            return
+        print(f"Staged preferences in {profile / 'user.js'}:")
+        for k, v in prefs.items():
+            print(f"  {k} = {v}")
+        return
+
+    if args.cmd == "set-user-pref":
+        stage_user_pref(profile, args.key, args.value)
+        print(f"Staged user_pref(\"{args.key}\", {args.value}) in {profile / 'user.js'}")
         return
 
     if args.cmd == "open-urls":

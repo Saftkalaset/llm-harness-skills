@@ -47,8 +47,22 @@ Do not silently filter out a functionally superior product because it violates a
   3. **Second-Hand / Long-Term Value (TCO) Pick** — Best used prosumer/commercial model (for goods) or best direct-value alternative.
 - **Trade-Off Tension Matrix:** Always include a structured table showing where the user's goals conflicted on the shortlisted candidates.
 
-## 5. Deliverable Format
+## 5. Deliverable & Completion Workflow
 
-- **Conversational Output:** Present quick summaries, archetype picks, and the Trade-Off Tension Matrix in compact Markdown tables.
-- **Comprehensive Reports:** For multi-candidate evaluations, compile a standalone, self-contained HTML report using [`html-presentation`](../html-presentation/SKILL.md) (`scripts/render_report.py`) and open it in Firefox (or provide a clickable `file:///` link).
+- **Clarifying Questions First:** If critical requirements or preferences are ambiguous (for example, missing `consumption-preferences.md` or unstated budget/sizing constraints that materially change the shortlist), ask the user concise clarifying questions (stating a recommended default first) before concluding research.
+- **Mandatory HTML Report & Form in Firefox Upon Completion:** Whenever research is complete and you have **no remaining questions to ask**, you **must** compile the full output using the [`html-presentation`](../html-presentation/SKILL.md) skill (`scripts/render_report.py --open`) and open it directly in Firefox:
+  ```bash
+  cat << 'EOF' | python3 <html-presentation-skill-dir>/scripts/render_report.py \
+    --title "Purchase Research: <Topic>" \
+    --scope "<Consumption Domain>" \
+    --status "Research Complete" \
+    --open
+  <!-- Cards, Archetype Picks, Candidate Comparison Table, Trade-Off Tension Matrix, and Interactive Decision Form -->
+  EOF
+  ```
+- **HTML Structure Requirements:**
+  1. **Executive Metric / Archetype Cards (`.cards-grid`):** Highlight the Best Overall Pick, Principled/Local Pick, and Second-Hand/TCO Pick.
+  2. **Candidate Comparison & Trade-Off Tension Matrix (`<table>`):** Include verified Tier 1/2 evidence, failure-mode findings, OEM/white-label disclosures, and explicit warning badges (`.badge-warning`, `.badge-danger`).
+  3. **Interactive Decision / Selection Form (`<form>`):** Include an HTML form section (using `.form-grid`, `.form-group`, `.choice-label`, and `<textarea>`) where the user can select preferred candidates, toggle trade-off priorities, or jot down follow-up notes directly in Firefox.
+- **Conversational Output:** Keep the terminal/chat response concise—provide a compact Markdown summary table of the archetype picks and a clickable `file:///` link to the generated HTML file.
 - **Provenance & Maintenance:** Consult [references/upstream.md](references/upstream.md) when upgrading this skill's research methodology.

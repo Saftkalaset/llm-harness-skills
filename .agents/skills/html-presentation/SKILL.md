@@ -50,5 +50,5 @@ EOF
 
 - **Zero External Dependencies:** CSS and fonts must be inlined; do not link external CDNs (like unpkg or Google Fonts) so reports render instantly offline.
 - **Typography & Theme:** Use native system font stacks (`-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, `Roboto`, `Inter`) with automatic dark/light mode switching (`prefers-color-scheme`).
-- **High Data Density:** Use structured tables with zebra-striping (`.badge-success`, `.badge-warning`, `.badge-danger`, `.badge-info`), metric cards (`.card`), and code blocks (`pre code`).
+- **High Data Density & Interactive Forms:** Use structured tables with zebra-striping (`.badge-success`, `.badge-warning`, `.badge-danger`, `.badge-info`), metric cards (`.card`), code blocks (`pre code`), and interactive form controls (`.form-grid`, `.form-group`, `.choice-label`, `select`, `textarea`, `.btn`) for decision checklists and user review forms.
 - **Upstream Inspiration & Evolution:** Consult [references/upstream.md](references/upstream.md) for provenance records, evaluated upstream repositories (`claude-report-skill`, `frontend-slides`, `html-presentation`), and re-evaluation triggers.

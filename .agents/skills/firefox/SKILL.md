@@ -66,13 +66,66 @@ python3 <skill-directory>/scripts/firefox_inspect.py open-tabs
     ```
   - **Built-in Firefox UI alternative:** **Firefox View** (top-left tab strip icon) > **Tabs from other devices**, or `☰` > **History** > **Synced tabs** > right-click device > **Open All in Tabs**.
 
-## 5. In-Page DOM Automation (Conditional)
+## 5. Protocol Handlers & Scheme Dispatching (`handlers.json` & Private Browsing)
+
+When dealing with external URL schemes (`magnet:`, `mailto:`, `zoommtg:`, `slack:`, `steam:`):
+
+### A. The URI Dispatch Pipeline (`nsContentDispatchChooser`)
+Firefox evaluates external scheme triggers in a three-step waterfall before opening an external application:
+1. **Global Scheme Authorization:** Queries `network.protocol-handler.external.<scheme>` (default `false`).
+2. **User Gesture Gate:** Checks if the load has transient user activation (`aHasValidUserGestureActivation`). If `network.protocol-handler.prompt-without-user-activation` is `true`, scripted/automatic triggers are gated.
+3. **Double-Keyed Site Permission:** Checks `open-protocol-handler^<scheme>` stored per-origin in `permissions.sqlite`.
+
+### B. The Private Browsing Isolation Trap
+- In **Private Browsing Mode**, all site permissions carry origin attribute `privateBrowsingId = 1` and are stored strictly in ephemeral RAM. They are **never written to disk** (`permissions.sqlite`) and are purged immediately when the private window or session closes.
+- Consequently, checking *"Always allow <site> to open <scheme> links"* inside a private window **always fails to persist** across sessions or when visiting different index domains.
+
+### C. The Protocol-Level Exemption Pattern
+To permanently bypass prompts for a protocol in **both normal and Private Browsing modes**:
+- Set `network.protocol-handler.external.<scheme>` to `true`.
+- Set `network.protocol-handler.warn-external.<scheme>` to `false`.
+- Ensure `<profile>/handlers.json` maps the scheme to an action:
+  - `action: 4` (`useSystemDefault`): Delegates to OS default handler (`xdg-mime query default x-scheme-handler/<scheme>`).
+  - `action: 2` (`useHelperApp`): Delegates to a specific application executable or web template.
+  - `ask: false` (or omit `"ask"`): Skips the application picker dialog.
+
+Inspect registered handlers and system defaults with the helper script:
+```bash
+python3 <skill-directory>/scripts/firefox_inspect.py handlers
+python3 <skill-directory>/scripts/firefox_inspect.py handlers --scheme magnet
+```
+
+---
+
+## 6. Safe Profile Configuration (`user.js` vs. Live `prefs.js`)
+
+**Golden Rule:** Never write directly to `prefs.js` while Firefox is running. Firefox maintains an in-memory preference tree and will silently overwrite `prefs.js` with its in-memory snapshot on shutdown.
+
+### Non-Destructive Staging via `user.js`
+- `<profile>/user.js` is Firefox's dedicated, persistent user override file.
+- **Safety guarantee:** Firefox **never writes to or modifies `user.js`**. It only reads it during startup and merges its values into `prefs.js`.
+- It is safe to create or append to `user.js` while Firefox is active. Preferences staged there will take effect on the next browser launch.
+- If an immediate change is required without restarting the browser, instruct the user to toggle the preference via `about:config` in their live window.
+
+List or stage preferences non-destructively with the helper script:
+```bash
+# View all preferences currently staged in user.js
+python3 <skill-directory>/scripts/firefox_inspect.py user-prefs
+
+# Stage a persistent boolean, integer, or string preference
+python3 <skill-directory>/scripts/firefox_inspect.py set-user-pref --key "network.protocol-handler.external.magnet" --value true
+python3 <skill-directory>/scripts/firefox_inspect.py set-user-pref --key "network.protocol-handler.warn-external.magnet" --value false
+```
+
+---
+
+## 7. In-Page DOM Automation (Conditional)
 
 When a task requires interacting with page DOM inside the user's logged-in Firefox session (clicking elements, filling forms, reading rendered state):
 
 - Check whether `firefox-cli` (`command -v firefox-cli`) or a Firefox WebDriver BiDi MCP server is installed and active.
 - If unavailable, do not restart the user's running Firefox session to add `--remote-debugging-port` without asking first; discuss installing `firefox-cli` or using read-only profile inspection.
 
-## 6. Upstream Provenance & References
+## 8. Upstream Provenance & References
 
 Consult [references/upstream.md](references/upstream.md) for provenance records, evaluated upstream projects (`firefox-cli`, Mozilla DevTools BiDi, Firefox Sync schema, `mozLz40` specifications), and re-evaluation triggers.

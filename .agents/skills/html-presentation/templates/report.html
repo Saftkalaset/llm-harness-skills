@@ -168,6 +168,79 @@
       padding: 0;
       border: none;
     }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .choice-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-weight: 400;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      background: var(--table-stripe);
+      cursor: pointer;
+    }
+    .choice-label:hover {
+      background: var(--table-hover);
+      border-color: var(--accent);
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="url"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--card-border);
+      background: var(--code-bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid var(--accent);
+      border-color: transparent;
+    }
+    button,
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    button:hover,
+    .btn:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
     footer {
       text-align: center;
       margin-top: 3rem;

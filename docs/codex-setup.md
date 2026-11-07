@@ -29,6 +29,17 @@ approval_mode = "approve"
 
 Codex stores MCP configuration in `~/.codex/config.toml`, shared by the Codex app, CLI, and IDE extension. Start with approval required for tool calls that can change the active Blender scene or write files.
 
+## WoW: Forever MCP Servers (`everloot` & `wowdb`)
+
+The [`wow-forever`](../.agents/skills/wow-forever/SKILL.md) skill queries two public, zero-auth Streamable HTTP MCP servers for *World of Warcraft: Forever* data:
+
+```bash
+codex mcp add everloot --url https://everloot.app/mcp/public
+codex mcp add wowdb --url https://azeroth.wiki/api/mcp
+```
+
+In Antigravity (`~/.gemini/config/mcp_config.json`), these are registered under `mcpServers` with `"url": "https://everloot.app/mcp/public"` and `"url": "https://azeroth.wiki/api/mcp"`. When MCP tools are unavailable in a sandboxed session, use `.agents/skills/wow-forever/scripts/wow_forever_query.py`.
+
 ## Blender project file access
 
 Codex's workspace sandbox does not automatically grant write access to the Blender project folders outside this repository. For a single project, launch Codex with that project folder as an additional writable directory:
