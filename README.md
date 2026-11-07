@@ -39,6 +39,13 @@ Generates standalone, self-contained HTML presentations, analytical reviews, and
 - **Toolkit:** Bundled CLI helper `scripts/render_report.py` and modular templates in `templates/report.html`
 - **Inspiration References:** Tracks upstream ecosystem skills and provenance in `references/upstream.md` (`claude-report-skill`, `frontend-slides`, `html-presentation`, `ui-ux-pro-max-skill`)
 
+### `purchase-research`
+Conducts values-aware, multi-objective purchase and consumption research across physical goods, digital services/software, physical/local services, and dining/cultural events.
+- **Preference Separation:** Reads personal weights, origin/energy hierarchies, and trade-off rules from `.local/system-context/consumption-preferences.md` (with a public template in `references/rubric-template.md`)
+- **Four-Domain Evaluation:** Evaluates physical goods (materials, metric/ISO, community repairability, ODM detection), digital services (clean-grid/nuclear hosting, agent-friendly data migration, Linux support), local services (employee satisfaction, independent providers), and dining/culture (pescetarian/flexitarian fit, independent venues, anti-scalping)
+- **Deliverables:** Archetype recommendations and explicit Trade-Off Tension Matrices rendered via `html-presentation`
+- **Inspiration References:** Tracks evaluated community skills in `references/upstream.md` (`product-research-skill`, `customer-research`, `amazon-product-research-skill`)
+
 ## Quick Setup (New Machine)
 
 ### Shared folder access
