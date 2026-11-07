@@ -61,3 +61,6 @@ Return a concise mechanical specification table and any critical limitations or 
 | Stand Base Column Ø | 60.0 | +0.20 /side (+0.40 Ø) | **60.40 ID** | Manufacturer nominal; allowance is a starting target pending printed coupon |
 | Cable Cutout (W × H) | 11.5 × 7.0 | +2.25 /side (+4.5 total W/H) | **16.0 × 11.5** | Measured plug envelope; allow bend/access space separately; verify supports |
 ```
+
+### 6. Upstream Provenance & References
+Consult [references/upstream.md](references/upstream.md) for provenance records, evaluated upstream specifications (EXIF Tag 274, Pillow image processing, NumPy calibration), and re-evaluation triggers.

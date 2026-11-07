@@ -22,6 +22,8 @@ Revision: <revision> | Date: <date> | Units/frame: <declared units and assembly 
 - Recipe: <stored function, explicit load/rebuild steps; no top-level execution>
 
 ## Current decisions and verification
+- Active geometry and saved print default: <adopted revision/process and files>
+- Recommended test candidates: <separate files and unperformed checks; not automatically adopted>
 - Design tradeoffs: <chosen concept, alternatives and physical limitations>
 - Mesh integrity: <scoped result and revision/hash>
 - Fit/motion: <tolerance, sampling resolution, seated/released/locked results>
@@ -30,6 +32,8 @@ Revision: <revision> | Date: <date> | Units/frame: <declared units and assembly 
 
 ## Artifacts and next action
 - Active `.blend`; neutral `.geometry.3mf`; configured project `.3mf` if verified.
+- Comparison ledger, when variants are evaluated: <one current record with proposed/evaluated/rejected/adopted status and evidence links>
 - Frozen geometry/configuration hashes: <values or manifest path>
 - Reproducible checks/logs: <retained paths and tool versions>
+- Historical notes/profiles and log archives: <revision-labeled locations; superseded guidance excluded from current recommendations>
 - Next step: <specific remaining task; do not imply unperformed checks passed>

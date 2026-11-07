@@ -48,14 +48,16 @@ Read [references/overhang-audit.md](references/overhang-audit.md) for support de
 
 ## Delegate from frozen artifacts
 
-Research, slicer preflight and independent checks may run outside the scene owner when delegation is available/authorized; otherwise perform them sequentially. Slicing receives an immutable export/hash, resolved configuration, constraints and a separate output directory. Workers must not edit the live scene or substitute hardware profiles. Return compact results/paths; keep full logs in files. Read [references/delegation.md](references/delegation.md).
+Research, slicer preflight and independent checks may run outside the scene owner when delegation is available/authorized; otherwise perform them sequentially. Slicing receives an immutable export/hash, resolved configuration, constraints and a separate output directory. Assign one execution owner per batch and surface permission blockers immediately; workers can prepare job manifests for the primary agent to launch when approval access differs. Workers must not edit the live scene or substitute hardware profiles. Return compact results/paths; keep full logs in files. Read [references/delegation.md](references/delegation.md).
 
 ## Save reproducible deliverables
 
 Use one active root `.blend`, concise `PROJECT.md`, append-only `LOG.md`, and immutable `history/` milestones where appropriate. Start notes from [resources/PROJECT_TEMPLATE.md](resources/PROJECT_TEMPLATE.md). Preserve the recipe, provenance and scripts/configuration needed to reproduce important checks, not just results in temporary storage.
 
+Keep `PROJECT.md` authoritative for the active geometry, saved print defaults and recommended test candidates. For variant studies, maintain one linked comparison ledger with proposed/evaluated/rejected/adopted status. Archive superseded guidance at milestones and repair links; follow [references/documentation.md](references/documentation.md) when maintaining or consolidating project notes.
+
 `snapshot_and_export()` saves a milestone and neutral **`.geometry.3mf`** via `export_geometry_3mf()`. It preserves a separately configured root `.3mf`. Neutral geometry has no printer settings. `slice_project.py` produces a separate configured project from verified effective settings. Reopen/check units, instances, placement and settings before claiming a ready-to-slice project. Existing callers expecting snapshot export to overwrite root `.3mf` must adopt this distinction.
 
 Save viewport images through supported file output or streaming, not large base64 shell arguments. Inspect isolated parts and assembly, restoring visibility/selection. With Blender MCP, `look` frames targets but may draw other visible objects; temporarily hide occluding references or use x-ray. Do not add camera/lights just for inspection.
 
-Stage and verify in authorized writable locations, then publish once with guarded copies when needed. Skills do not grant filesystem permissions. Keep machine-local caches and optional platform permissions separate from shared skill source.
+Stage and verify in authorized writable locations, then publish once with guarded copies when needed. Skills do not grant filesystem permissions. Keep machine-local caches and optional platform permissions separate from shared skill source. Consult [references/upstream.md](references/upstream.md) for provenance records and upstream tool specifications (Blender 3D-Print Toolbox, Blender MCP, PrusaSlicer CLI).
