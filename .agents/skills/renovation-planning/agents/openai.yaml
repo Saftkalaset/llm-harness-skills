@@ -1,0 +1,4 @@
+interface:
+  display_name: "Renovation Planning"
+  short_description: "Plan renovations from drawings, photos and measured space"
+  default_prompt: "Use $renovation-planning to assess the drawings, establish reliable geometry and compare renovation options."

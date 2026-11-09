@@ -46,6 +46,15 @@ Conducts values-aware, multi-objective purchase and consumption research across 
 - **Deliverables:** Archetype recommendations, explicit Trade-Off Tension Matrices, and interactive decision forms rendered via `html-presentation`
 - **Inspiration References:** Tracks evaluated community skills in `references/upstream.md` (`product-research-skill`, `customer-research`, `amazon-product-research-skill`)
 
+### `renovation-planning`
+Assesses renovation evidence, evaluates structural-wall records, maps documented utilities and compares layouts on registered original drawings.
+- **Default Baseline:** Once the apartment is identified, enlarge the original, annotate every identifiable wall, evaluate structural roles and map all supported utility points/routes with confidence and explicit evidence gaps
+- **Geometry:** Fixed source underlays, explicit calibration and area accounting, stable wall IDs and shared geometry across alternatives
+- **Feasibility:** Wall-by-wall evidence assessment; separate water, drainage, heating, electricity and ventilation layers with route confidence; appliance/service and circulation checks
+- **Iteration:** Tracks user preferences separately from requirements, preserves requested alternatives and shows boundary crossings and clearance trade-offs
+- **Toolkit:** Dependency-free `scripts/plan_math.py` for calibration, area sums, pinned-geometry drift, opposed rectangular gaps and boundary checks; does not certify structural or installation safety
+- **Delivery:** Inspectable HTML/SVG comparisons with current/proposed views, readable tables and durable project data/generators
+
 ### `wow-forever`
 Researches, optimizes, and plans gameplay for *World of Warcraft: Forever* (`1.60.1` / Classic+ branch), tailored for efficiency-first leveling and parallel profession progression.
 - **Character Context Separation:** Reads active character state (e.g., Night Elf Feral Druid, PvP server, Skinning & Leatherworking) and optimization rules from `.local/system-context/wow-forever-profile.md` (with a public template in `references/character-profile-template.md`)
